@@ -41,7 +41,7 @@ export function App() {
     const quotesObject = await result.json();
     // console.log(await result.json());
     console.log(quotesObject.results)
-    //console.log(searchWord)
+    ////console.log(searchWord)
     setListQuotes(quotesObject.results[0].content + quotesObject.results[0].author)
     setListQuotes2(quotesObject.results[1].content + quotesObject.results[1].author)
     setListQuotes3(quotesObject.results[2].content + quotesObject.results[2].author)
