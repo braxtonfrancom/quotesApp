@@ -38,7 +38,7 @@ export function App() {
     callApi()
   },[])
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSearchWord(searchWord);
     callSearchApi()
@@ -64,7 +64,7 @@ export function App() {
           <div>
             {listQuotesBool ? <>
               {
-              quotes.map((quote) => (
+              quotes?.map((quote) => (
                 <div key={quote.content}>
                   <div className="listItem">
                     {quote.content}
