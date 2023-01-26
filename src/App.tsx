@@ -4,32 +4,31 @@ import './App.css'
 import React from 'react'
 
 
-
-interface Quote {
-  quote: string;
+let ID_COUNT = 0;
+interface Quote {  //Never used interface 
+  id: number;
+  content: string;
   author: string;
-
 }
 
 export function App() {
 
-  const [quoteContent, setQuote] = useState("")
+  const [content, setQuote] = useState("")
   const [author, setAuthor] = useState("")
   const [loading, setLoading] = useState(false)
   const [listQuotesBool, setListQuotesBool] = useState(false)
-  const [listQuotes, setListQuotes] = useState([''])
-  const [listQuotes2, setListQuotes2] = useState([''])
-  const [listQuotes3, setListQuotes3] = useState([''])
 
   const [searchWord, setSearchWord] = useState('')
+
+  const [quotes, setQuotes] = useState< Quote[] | null >([])  //Trying to get the list of 20 quotes
   
 
 
-  async function callApi() {  //add async at start
+  async function callApi() {
     setLoading(true);
     const result = await fetch("https://api.quotable.io/random");
     const quoteObject = await result.json();
-    await timeout(500);
+    await timeout(200);
     setLoading(false);
     setQuote(quoteObject.content);
     setAuthor(quoteObject.author);
@@ -37,20 +36,13 @@ export function App() {
 
   async function callSearchApi() {
     setListQuotesBool(true);
-    const result = await fetch("https://usu-quotes-mimic.vercel.app/api/search?query=" + searchWord);    //https://the-trivia-api.com/api/questions 
-    const quotesObject = await result.json();
-    // console.log(await result.json());
-    console.log(quotesObject.results)
-    ////console.log(searchWord)
-    setListQuotes(quotesObject.results[0].content + quotesObject.results[0].author)
-    setListQuotes2(quotesObject.results[1].content + quotesObject.results[1].author)
-    setListQuotes3(quotesObject.results[2].content + quotesObject.results[2].author)
+    const listOfResults = await fetch("https://usu-quotes-mimic.vercel.app/api/search?query=" + searchWord); 
+    const quotesObject = await listOfResults.json();
+    
+    console.log(quotesObject)
 
-
-    //console.log(quotesObject[0].question)
-    // setListQuotes(quotesObject[0].question + quotesObject[0].correctAnswer); //[0].question    //["bru", "bru"]
-    // setListQuotes2(quotesObject[1].question + quotesObject[1].correctAnswer)
-    // setListQuotes3(quotesObject[2].question + quotesObject[2].correctAnswer)
+    setQuotes(quotesObject['results'])
+    console.log(quotes) //WHY IS IT AN EMPTY LIST??
   }
 
 
@@ -59,6 +51,7 @@ export function App() {
     return new Promise( res => setTimeout(res, delay) );
 }
 
+      
   useEffect(() => { //On the first time you render, do this, and then never do it again
     callApi()
     
@@ -75,7 +68,7 @@ export function App() {
   return (
     <div>
       <h1>Quote Search</h1>
-      <form id="form" onSubmit={handleSubmit}> {/*onSubmit={handleSubmit}*/}
+      <form id="form" onSubmit={handleSubmit}>
         <input 
         type="search" 
         placeholder="Search..." 
@@ -83,33 +76,34 @@ export function App() {
         onChange={(event) =>
           setSearchWord(event.target.value)
         }
-        // onSubmit={  
-        //   (e) => handleSubmit(e)
-          
-        // }
-        // onChange={(e) => setListQuotes(e.target.valueAsNumber)}
-
-         />                      {/*(e) => e.preventDefault()*/}
+         />
       </form>
       <div>  
         {
           <div>
+
             {listQuotesBool ? <>
-            <h3 className='listItem'>{listQuotes}</h3>
-            <h3 className='listItem'>{listQuotes2}</h3>
-            <h3 className='listItem'>{listQuotes3}</h3></> : <><h3>{loading ? <>Loading..</> : <>{quoteContent}</>}</h3>
+            
+              {
+              quotes.map((quote) => (
+                <div key={quote.id}>
+                  <div className="unique">
+                    {quote.content}
+                    <br />
+                    <div>{"- " + quote.author}</div>
+                  </div>
+                </div>
+              ))
+            }
+            </> : <>
+            <h3>{loading ? <>Loading..
+            </> : <>
+            {content}</>}</h3>
             <h4>{author}</h4></>}
 
-
-            <h4>{searchWord}</h4>
           </div>
         }
       </div>
     </div>
   )
 }
-
-
-{/*gitignore the node_modules!
-
-SIde Effect*/}

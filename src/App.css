@@ -55,3 +55,14 @@ h3, h4 {
   box-shadow: 5px 5px 10px 2px rgba(0,0,0,.8);
   /* border-radius: 30px; */
 }
+
+
+.unique {
+  background-color: #667761;
+  font-size: medium;
+  box-shadow: 5px 5px 10px 2px rgba(0,0,0,.8);
+  padding: 2em;
+  border-radius: 30px;
+  margin : 20px auto;
+
+}
